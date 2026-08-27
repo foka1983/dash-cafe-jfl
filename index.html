@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Café da Manhã 2026 — JFL</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:light;
+  --te:#752B1F;--tc:#8E4E38;--ae:#91755A;--ac:#AF8668;
+  --ow:#D8D5D2;--lj:#E67142;--bg:#F7F4F2;--wh:#FFFFFF;
+  --dk:#3A2A22;--mt:#7A6556;--ok:#5E8C61;--wn:#C0392B;
+  --bd:#E3DDD8;--gr:#EDE8E4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--dk);font-size:14px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:var(--te);display:flex;align-items:center;padding:0 16px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:800;font-size:15px;color:var(--lj);margin-right:10px;letter-spacing:-1px;flex-shrink:0}
+nav a{color:var(--ow);text-decoration:none;padding:11px 13px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;opacity:.7;transition:opacity .15s;border-bottom:2px solid transparent;flex-shrink:0}
+nav a:hover,nav a.active{opacity:1;border-bottom-color:var(--lj)}
+
+/* FILTER BAR */
+.fbar{position:sticky;top:38px;z-index:190;background:var(--tc);padding:8px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.fbar label{color:var(--ow);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-right:5px}
+.fbar select{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:5px 10px;border-radius:6px;font-size:12px;cursor:pointer;outline:none;min-width:130px}
+.fbar select option{background:#6B3020;color:#fff}
+.fbar-badge{margin-left:auto;background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--ow);font-weight:600;white-space:nowrap}
+
+/* HERO */
+.hero{background:var(--te);padding:36px 28px 30px;position:relative;overflow:hidden}
+.hero-deco{position:absolute;border-radius:50%}
+.hd1{width:260px;height:260px;right:-50px;bottom:-70px;background:var(--tc);opacity:.35}
+.hd2{width:140px;height:140px;right:90px;bottom:10px;background:var(--ae);opacity:.22}
+.hero-inner{position:relative;z-index:1}
+.hero h1{font-size:34px;font-weight:700;color:var(--ow);line-height:1.1}
+.hero h1 span{color:var(--lj)}
+.hero-sub{color:var(--ac);font-size:13px;margin-top:6px}
+.hero-stats{display:flex;gap:32px;margin-top:24px;flex-wrap:wrap}
+.hs-val{font-size:22px;font-weight:700;color:#fff}
+.hs-lbl{font-size:10px;color:var(--ac);margin-top:2px}
+
+/* SECTION */
+.sec{padding:28px 22px;max-width:1100px;margin:0 auto}
+.sec-hd{font-size:16px;font-weight:700;color:var(--te);margin-bottom:2px}
+.sec-sub{font-size:11px;color:var(--mt);margin-bottom:18px}
+.divider{height:1px;background:var(--bd);margin:0 22px}
+
+/* KPI */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
+.kcard{background:var(--wh);border-radius:10px;padding:16px 15px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.kdot{width:9px;height:9px;border-radius:50%;margin-bottom:9px}
+.klbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mt)}
+.kval{font-size:22px;font-weight:700;margin:5px 0 3px;line-height:1}
+.khint{font-size:10px;color:var(--mt)}
+
+/* CHART */
+.cgrid{display:grid;gap:18px}
+.cgrid.two{grid-template-columns:1fr 1fr}
+.cgrid.one{grid-template-columns:1fr}
+@media(max-width:700px){.cgrid.two{grid-template-columns:1fr}}
+.ccard{background:var(--wh);border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.ctitle{font-size:12px;font-weight:700;color:var(--dk);text-transform:uppercase;letter-spacing:.3px}
+.csub{font-size:10px;color:var(--mt);margin:2px 0 12px}
+.cwrap{position:relative;height:255px}
+.cwrap.tall{height:295px}
+
+/* TABLE */
+.twrap{background:var(--wh);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.07);overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--te);color:var(--ow);padding:9px 11px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--bd)}
+tbody tr:nth-child(even){background:#FAF7F5}
+tbody tr:hover{background:#F2EDE9}
+td{padding:8px 11px;white-space:nowrap}
+.tnum{text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.bok{background:#E8F5E9;color:#2E7D32}
+.bwn{background:#FFEBEE;color:#C62828}
+.bnt{background:#FFF8E1;color:#F57F17}
+.tfoot td{font-weight:700;background:#F0EBE8;border-top:2px solid var(--tc)}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">JFL</span>
+  <a href="#resumo" class="active">Resumo</a>
+  <a href="#consumo">Consumo</a>
+  <a href="#evolucao">Evolução</a>
+  <a href="#custo">Custo vs Meta</a>
+  <a href="#composicao">Composição</a>
+  <a href="#tabela">Tabela</a>
+</nav>
+
+<div class="fbar">
+  <div><label for="sel-mes">Mês</label>
+    <select id="sel-mes">
+      <option value="ALL">Todos os meses</option>
+      <option value="JANEIRO">Janeiro</option>
+      <option value="FEVEREIRO">Fevereiro</option>
+      <option value="MARÇO">Março</option>
+      <option value="ABRIL">Abril</option>
+      <option value="MAIO">Maio</option>
+      <option value="JUNHO">Junho</option>
+      <option value="JULHO">Julho</option>
+      <option value="AGOSTO">Agosto</option>
+    </select>
+  </div>
+  <div><label for="sel-prd">Prédio</label>
+    <select id="sel-prd">
+      <option value="ALL">Todos os prédios</option>
+      <option value="AVNU">AVNU</option>
+      <option value="JFL125">JFL125</option>
+      <option value="VO699">VO699</option>
+      <option value="JML747">JML747</option>
+      <option value="VHouse">VHouse</option>
+    </select>
+  </div>
+  <div class="fbar-badge" id="filter-badge">Acumulado · Jan–Ago · Todos os prédios</div>
+</div>
+
+<div class="hero">
+  <div class="hero-deco hd1"></div>
+  <div class="hero-deco hd2"></div>
+  <div class="hero-inner">
+    <h1>Café da Manhã <span>2026</span></h1>
+    <p class="hero-sub" id="hero-sub">Consumo & Custo por Prédio · Janeiro a Agosto</p>
+    <div class="hero-stats">
+      <div><div class="hs-val" id="hs-tot">—</div><div class="hs-lbl">Cafés consumidos</div></div>
+      <div><div class="hs-val" id="hs-jfl">—</div><div class="hs-lbl">Consumo JFL</div></div>
+      <div><div class="hs-val" id="hs-pi">—</div><div class="hs-lbl">Consumo PI</div></div>
+      <div><div class="hs-val" id="hs-custo">—</div><div class="hs-lbl">Custo méd. / café</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="resumo">
+  <div class="sec-hd">Resumo Executivo</div>
+  <div class="sec-sub" id="sub-resumo">Janeiro a Agosto 2026 · Todos os prédios</div>
+  <div class="kgrid">
+    <div class="kcard"><div class="kdot" style="background:var(--te)"></div><div class="klbl">Total de Cafés</div><div class="kval" id="k-tot" style="color:var(--te)">—</div><div class="khint">período selecionado</div></div>
+    <div class="kcard"><div class="kdot" style="background:var(--lj)"></div><div class="klbl">Consumo JFL</div><div class="kval" id="k-jfl" style="color:var(--lj)">—</div><div class="khint" id="k-jfl-h">—</div></div>
+    <div class="kcard"><div class="kdot" style="background:var(--ae)"></div><div class="klbl">Consumo PI</div><div class="kval" id="k-pi" style="color:var(--ae)">—</div><div class="khint" id="k-pi-h">—</div></div>
+    <div class="kcard"><div class="kdot" id="d-ins"></div><div class="klbl">Custo Insumos / Café</div><div class="kval" id="k-ins">—</div><div class="khint">média simples</div></div>
+    <div class="kcard"><div class="kdot" style="background:var(--ac)"></div><div class="klbl">Meta / Café</div><div class="kval" id="k-meta" style="color:var(--ac)">—</div><div class="khint">custo alvo</div></div>
+    <div class="kcard"><div class="kdot" id="d-dif"></div><div class="klbl">Diferença vs Meta</div><div class="kval" id="k-dif">—</div><div class="khint" id="k-dif-h">—</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec" id="consumo">
+  <div class="sec-hd">Consumo de Cafés</div>
+  <div class="sec-sub" id="sub-consumo">JFL e PI · acumulado Jan–Ago 2026</div>
+  <div class="cgrid one">
+    <div class="ccard">
+      <div class="ctitle" id="ct-consumo">Cafés por Prédio</div>
+      <div class="csub" id="cs-consumo">Consumo acumulado · Jan–Ago 2026</div>
+      <div class="cwrap"><canvas id="ch-consumo"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec" id="evolucao">
+  <div class="sec-hd">Evolução Mensal do Consumo</div>
+  <div class="sec-sub" id="sub-evol">Cafés por mês · Jan–Ago 2026</div>
+  <div class="cgrid one">
+    <div class="ccard">
+      <div class="ctitle" id="ct-evol">Consumo Mensal por Prédio</div>
+      <div class="csub" id="cs-evol">Número de cafés · todos os prédios</div>
+      <div class="cwrap"><canvas id="ch-evol"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec" id="custo">
+  <div class="sec-hd">Custo de Insumos / Café vs Meta</div>
+  <div class="sec-sub">R$ por café · comparação com meta</div>
+  <div class="cgrid two">
+    <div class="ccard">
+      <div class="ctitle" id="ct-cp">Por Prédio</div>
+      <div class="csub" id="cs-cp">Jan–Ago 2026 · R$ / café</div>
+      <div class="cwrap"><canvas id="ch-cp"></canvas></div>
+    </div>
+    <div class="ccard">
+      <div class="ctitle" id="ct-cm">Por Mês</div>
+      <div class="csub" id="cs-cm">Todos os prédios · R$ / café</div>
+      <div class="cwrap"><canvas id="ch-cm"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec" id="composicao">
+  <div class="sec-hd">Composição do Custo Total / Café</div>
+  <div class="sec-sub">Insumos + Mão de Obra + Operacional vs Meta</div>
+  <div class="cgrid one">
+    <div class="ccard">
+      <div class="ctitle" id="ct-comp">Custo Total Decomposto</div>
+      <div class="csub" id="cs-comp">R$ / café</div>
+      <div class="cwrap tall"><canvas id="ch-comp"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec" id="tabela">
+  <div class="sec-hd">Detalhamento</div>
+  <div class="sec-sub" id="sub-tab">Todos os registros do período selecionado</div>
+  <div class="twrap"><table>
+    <thead><tr>
+      <th>Prédio</th><th>Mês</th>
+      <th class="tnum">Total</th><th class="tnum">JFL</th><th class="tnum">PI</th>
+      <th class="tnum">Custo Ins.</th><th class="tnum">Custo Total</th>
+      <th class="tnum">Meta</th><th>Status</th>
+    </tr></thead>
+    <tbody id="tbl-body"></tbody>
+  </table></div>
+</div>
+
+<div style="height:40px"></div>
+
+<script>
+const RAW=[
+  {p:"AVNU",   m:"JANEIRO",   total:3116,jfl:3116,pi:0,   ins:23.19,mo:14.42,op:4.03, meta:31.67},
+  {p:"JFL125", m:"JANEIRO",   total:1314,jfl:1314,pi:0,   ins:28.39,mo:22.27,op:5.44, meta:22.07},
+  {p:"VO699",  m:"JANEIRO",   total:1507,jfl:1507,pi:0,   ins:27.09,mo:22.67,op:5.61, meta:24.40},
+  {p:"JML747", m:"JANEIRO",   total:1848,jfl:1538,pi:310, ins:27.88,mo:17.54,op:2.93, meta:27.00},
+  {p:"VHouse", m:"JANEIRO",   total:1778,jfl:1015,pi:763, ins:27.11,mo:17.15,op:3.43, meta:24.67},
+  {p:"AVNU",   m:"FEVEREIRO", total:2830,jfl:2830,pi:0,   ins:19.70,mo:17.22,op:2.71, meta:31.67},
+  {p:"JFL125", m:"FEVEREIRO", total:2026,jfl:2026,pi:0,   ins:23.33,mo:16.40,op:2.21, meta:22.07},
+  {p:"VO699",  m:"FEVEREIRO", total:1567,jfl:1567,pi:0,   ins:29.85,mo:19.61,op:3.15, meta:24.40},
+  {p:"JML747", m:"FEVEREIRO", total:2205,jfl:1798,pi:407, ins:22.60,mo:17.05,op:2.68, meta:27.00},
+  {p:"VHouse", m:"FEVEREIRO", total:2435,jfl:1451,pi:1025,ins:25.06,mo:15.91,op:1.97, meta:24.67},
+  {p:"AVNU",   m:"MARÇO",     total:2657,jfl:2657,pi:0,   ins:22.81,mo:19.70,op:3.18, meta:31.67},
+  {p:"JFL125", m:"MARÇO",     total:1686,jfl:1686,pi:0,   ins:32.00,mo:19.49,op:9.47, meta:22.07},
+  {p:"VO699",  m:"MARÇO",     total:1524,jfl:1524,pi:0,   ins:29.15,mo:22.47,op:6.70, meta:24.40},
+  {p:"JML747", m:"MARÇO",     total:1895,jfl:1523,pi:372, ins:24.19,mo:19.41,op:3.12, meta:27.00},
+  {p:"VHouse", m:"MARÇO",     total:2089,jfl:1138,pi:951, ins:27.59,mo:19.31,op:5.00, meta:24.67},
+  {p:"AVNU",   m:"ABRIL",     total:2711,jfl:2711,pi:0,   ins:31.34,mo:16.20,op:2.20, meta:31.67},
+  {p:"JFL125", m:"ABRIL",     total:2046,jfl:2046,pi:0,   ins:25.20,mo:17.25,op:4.72, meta:22.07},
+  {p:"VO699",  m:"ABRIL",     total:1737,jfl:1737,pi:0,   ins:30.32,mo:20.38,op:4.66, meta:24.40},
+  {p:"JML747", m:"ABRIL",     total:2509,jfl:2176,pi:333, ins:22.84,mo:16.87,op:2.94, meta:27.00},
+  {p:"VHouse", m:"ABRIL",     total:2335,jfl:1201,pi:1134,ins:28.91,mo:25.77,op:2.59, meta:24.67},
+  {p:"AVNU",   m:"MAIO",      total:3610,jfl:3610,pi:0,   ins:24.42,mo:12.46,op:3.25, meta:31.67},
+  {p:"JFL125", m:"MAIO",      total:1823,jfl:1823,pi:0,   ins:26.78,mo:18.18,op:5.22, meta:22.07},
+  {p:"VO699",  m:"MAIO",      total:1698,jfl:1698,pi:0,   ins:34.51,mo:21.75,op:4.35, meta:24.40},
+  {p:"JML747", m:"MAIO",      total:2356,jfl:1902,pi:454, ins:32.75,mo:16.47,op:2.59, meta:27.00},
+  {p:"VHouse", m:"MAIO",      total:2423,jfl:1343,pi:1080,ins:29.17,mo:15.61,op:2.84, meta:24.67},
+  {p:"AVNU",   m:"JUNHO",     total:3419,jfl:3419,pi:0,   ins:20.82,mo:12.12,op:22.91,meta:31.67},
+  {p:"JFL125", m:"JUNHO",     total:2126,jfl:2126,pi:0,   ins:23.95,mo:16.16,op:3.31, meta:22.07},
+  {p:"VO699",  m:"JUNHO",     total:1741,jfl:1741,pi:0,   ins:28.90,mo:24.53,op:4.87, meta:24.40},
+  {p:"JML747", m:"JUNHO",     total:2245,jfl:1840,pi:405, ins:24.53,mo:18.72,op:3.19, meta:27.00},
+  {p:"VHouse", m:"JUNHO",     total:2364,jfl:1399,pi:965, ins:27.14,mo:15.68,op:2.37, meta:24.67},
+  {p:"AVNU",   m:"JULHO",     total:2747,jfl:2747,pi:0,   ins:15.56,mo:16.18,op:12.39,meta:31.67},
+  {p:"JFL125", m:"JULHO",     total:1958,jfl:1958,pi:0,   ins:13.17,mo:18.35,op:14.01,meta:22.07},
+  {p:"VO699",  m:"JULHO",     total:1603,jfl:1603,pi:0,   ins:21.53,mo:27.50,op:15.55,meta:24.40},
+  {p:"JML747", m:"JULHO",     total:2246,jfl:1859,pi:387, ins:16.19,mo:18.48,op:13.57,meta:27.00},
+  {p:"VHouse", m:"JULHO",     total:2586,jfl:1545,pi:1041,ins:21.81,mo:14.76,op:9.90, meta:24.67},
+  {p:"AVNU",   m:"AGOSTO",    total:2750,jfl:2750,pi:0,   ins:18.83,mo:18.22,op:3.49, meta:31.67},
+  {p:"JFL125", m:"AGOSTO",    total:2317,jfl:2317,pi:0,   ins:21.68,mo:16.67,op:4.65, meta:22.07},
+  {p:"VO699",  m:"AGOSTO",    total:1824,jfl:1824,pi:0,   ins:33.99,mo:27.84,op:7.62, meta:24.40},
+  {p:"JML747", m:"AGOSTO",    total:2502,jfl:2128,pi:374, ins:24.76,mo:19.51,op:3.80, meta:27.00},
+  {p:"VHouse", m:"AGOSTO",    total:2454,jfl:1473,pi:981, ins:32.57,mo:20.47,op:3.63, meta:24.67},
+];
+RAW.forEach(r=>r._isRaw=true);
+
+const PREDIOS=["AVNU","JFL125","VO699","JML747","VHouse"];
+const MESES=["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO"];
+const MESES_S=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago"];
+const PC={AVNU:"#752B1F",JFL125:"#E67142",VO699:"#3A7D5B",JML747:"#AF8668",VHouse:"#4A6B8A"};
+const MC=["#752B1F","#8E4E38","#91755A","#AF8668","#E67142","#3A7D5B"];
+
+function wAvg(rows,f,w){const tw=rows.reduce((s,r)=>s+r[w],0);return tw?rows.reduce((s,r)=>s+r[f]*r[w],0)/tw:0}
+function avg(rows,f){return rows.length?rows.reduce((s,r)=>s+r[f],0)/rows.length:0}
+const fN=n=>Math.round(n).toLocaleString("pt-BR");
+const fR=n=>"R$ "+n.toFixed(2).replace(".",",");
+const pct=(a,b)=>b>0?((a/b)*100).toFixed(0)+"%":"—";
+const capF=s=>s.charAt(0)+s.slice(1).toLowerCase();
+
+Chart.defaults.font.family="'Segoe UI',Arial,sans-serif";
+Chart.defaults.color="#7A6556";
+const grd={color:"#EDE8E4"};
+const bY={grid:grd,ticks:{font:{size:10}}};
+const bX={grid:{display:false},ticks:{font:{size:11}}};
+
+function mkBar(id,labels,datasets,opts={}){
+  return new Chart(document.getElementById(id),{type:"bar",
+    data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:"bottom",labels:{boxWidth:11,padding:14,font:{size:10}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${opts.fmtR?fR(ctx.parsed.y):fN(ctx.parsed.y)}`}}},
+      scales:{x:{...bX,...(opts.stack?{stacked:true}:{})},
+        y:{...bY,...(opts.stack?{stacked:true}:{}),
+          ticks:{...bY.ticks,callback:v=>opts.fmtR?"R$"+v.toFixed(0):fN(v)}}}}});
+}
+function mkLine(id,labels,datasets){
+  return new Chart(document.getElementById(id),{type:"line",
+    data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:"bottom",labels:{boxWidth:11,padding:12,font:{size:10}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fN(ctx.parsed.y)}`}}},
+      scales:{x:bX,y:{...bY,ticks:{...bY.ticks,callback:v=>fN(v)}}}}});
+}
+
+let S={mes:"ALL",prd:"ALL"};
+let CH={};
+
+CH.consumo = mkBar("ch-consumo",[],[],{stack:true});
+CH.evol    = mkLine("ch-evol",MESES_S,[]);
+CH.cp      = mkBar("ch-cp",[],[],{fmtR:true});
+CH.cm      = mkBar("ch-cm",[],[],{fmtR:true});
+CH.comp    = mkBar("ch-comp",[],[],{stack:true,fmtR:true});
+
+function render(){
+  const{mes,prd}=S;
+  const data=RAW.filter(r=>(mes==="ALL"||r.m===mes)&&(prd==="ALL"||r.p===prd));
+
+  const byPrd=prd==="ALL";
+  const grpKeys=byPrd
+    ?PREDIOS.filter(p=>data.some(r=>r.p===p))
+    :MESES.filter(m=>data.some(r=>r.m===m));
+  const grpShort=byPrd?grpKeys:grpKeys.map(m=>MESES_S[MESES.indexOf(m)]);
+  const dim=byPrd?"p":"m";
+
+  function grpSum(f){return grpKeys.map(k=>data.filter(r=>r[dim]===k).reduce((s,r)=>s+r[f],0))}
+  function grpAvg(f){return grpKeys.map(k=>{const rr=data.filter(r=>r[dim]===k);return avg(rr,f)})}
+  const grpColors=byPrd?grpKeys.map(k=>PC[k]):grpKeys.map((_,i)=>MC[i]);
+
+  const tot=data.reduce((s,r)=>s+r.total,0);
+  const jfl=data.reduce((s,r)=>s+r.jfl,0);
+  const pi=data.reduce((s,r)=>s+r.pi,0);
+  const ins=avg(data,"ins");
+  const meta=avg(data,"meta");
+  const dif=meta-ins;
+  const difOk=dif>=0;
+  const difC=difOk?"#5E8C61":"#C0392B";
+
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  const sty=(id,p,v)=>{const e=document.getElementById(id);if(e)e.style[p]=v};
+
+  // Hero
+  set("hs-tot",fN(tot));set("hs-jfl",fN(jfl));set("hs-pi",fN(pi));set("hs-custo",fR(ins));
+  const heroSub=byPrd?(mes==="ALL"?"Consumo & Custo · Jan–Ago 2026":`Consumo & Custo · ${capF(mes)} 2026`):`Prédio ${prd} · ${mes==="ALL"?"Jan–Ago 2026":capF(mes)+" 2026"}`;
+  set("hero-sub",heroSub);
+
+  // KPIs
+  set("k-tot",fN(tot));set("k-jfl",fN(jfl));set("k-pi",fN(pi));
+  set("k-jfl-h",pct(jfl,tot)+" do total");set("k-pi-h",pct(pi,tot)+" do total");
+  set("k-ins",fR(ins));set("k-meta",fR(meta));
+  set("k-dif",(dif>=0?"+":"")+fR(dif));set("k-dif-h",difOk?"✓ abaixo da meta":"✗ acima da meta");
+  sty("k-ins","color",difC);sty("k-dif","color",difC);
+  sty("d-ins","background",difC);sty("d-dif","background",difC);
+
+  const lbl=byPrd&&mes==="ALL"?"Acumulado · Jan–Ago · Todos os prédios"
+    :!byPrd&&mes==="ALL"?`Prédio ${prd} · Jan–Ago 2026`
+    :byPrd&&mes!=="ALL"?`${capF(mes)} 2026 · Todos os prédios`
+    :`${capF(mes)} 2026 · Prédio ${prd}`;
+  set("filter-badge",lbl);set("sub-resumo",lbl);
+
+  // CH1 — Consumo
+  const jflV=grpSum("jfl"), piV=grpSum("pi"), hasPi=piV.some(v=>v>0);
+  CH.consumo.data.labels=grpShort;
+  CH.consumo.data.datasets=[
+    {label:"JFL",data:jflV,backgroundColor:"#752B1F",borderRadius:hasPi?0:4,stack:"s"},
+    ...(hasPi?[{label:"PI",data:piV,backgroundColor:"#E67142",borderRadius:4,stack:"s"}]:[])
+  ];
+  CH.consumo.update();
+  set("ct-consumo",byPrd?"Cafés por Prédio":"Cafés por Mês — "+prd);
+  set("cs-consumo",byPrd?(mes==="ALL"?"Acumulado Jan–Ago 2026":capF(mes)+" 2026"):"Jan–Ago 2026 · "+prd);
+
+  // CH2 — Evolução (always months on X)
+  const evolP=byPrd?PREDIOS:[prd];
+  CH.evol.data.labels=MESES_S;
+  CH.evol.data.datasets=evolP.map(p=>({
+    label:p,
+    data:MESES.map(m=>{const r=RAW.find(rr=>rr.p===p&&rr.m===m);return r?r.total:0}),
+    borderColor:PC[p],backgroundColor:PC[p]+"22",borderWidth:2.5,
+    pointRadius:MESES.map(m=>m===mes?7:3.5),
+    pointBackgroundColor:MESES.map(m=>m===mes?"#fff":PC[p]),
+    pointBorderColor:MESES.map(m=>m===mes?PC[p]:"transparent"),
+    pointBorderWidth:2.5,tension:.2
+  }));
+  CH.evol.update();
+  set("cs-evol",(byPrd?"Todos os prédios":"Prédio "+prd)+" · Jan–Ago 2026"+(mes!=="ALL"?" · "+capF(mes)+" destacado":""));
+
+  // CH3 — Custo vs Meta por eixo dinâmico
+  const insP=grpAvg("ins"), metaP=grpAvg("meta");
+  CH.cp.data.labels=grpShort;
+  CH.cp.data.datasets=[
+    {label:"Custo Insumos/Café",data:insP.map(v=>+v.toFixed(2)),backgroundColor:grpColors,borderRadius:4,order:1},
+    {label:"Meta",type:"line",data:metaP.map(v=>+v.toFixed(2)),
+     borderColor:"#5E8C61",borderWidth:2.5,borderDash:[5,4],
+     pointBackgroundColor:"#5E8C61",pointRadius:5,backgroundColor:"transparent",order:0}
+  ];
+  CH.cp.update();
+  set("ct-cp",byPrd?"Por Prédio":"Por Mês — "+prd);
+  set("cs-cp",(byPrd?(mes==="ALL"?"Jan–Ago 2026":capF(mes)+" 2026"):("Prédio "+prd+" · Jan–Ago 2026"))+" · R$/café");
+
+  // CH4 — Custo vs Meta por Mês (always months)
+  const cmD=MESES.map(m=>{const rr=RAW.filter(r=>(byPrd||r.p===prd)&&r.m===m);return+avg(rr,"ins").toFixed(2)});
+  const cmM=MESES.map(m=>{const rr=RAW.filter(r=>(byPrd||r.p===prd)&&r.m===m);return+avg(rr,"meta").toFixed(2)});
+  CH.cm.data.labels=MESES_S;
+  CH.cm.data.datasets=[
+    {label:"Custo Insumos/Café",data:cmD,backgroundColor:MESES.map((m,i)=>m===mes?"#752B1F":MC[i]+"BB"),borderRadius:4,order:1},
+    {label:"Meta",type:"line",data:cmM,borderColor:"#5E8C61",borderWidth:2.5,borderDash:[5,4],
+     pointBackgroundColor:"#5E8C61",pointRadius:5,backgroundColor:"transparent",order:0}
+  ];
+  CH.cm.update();
+  set("ct-cm",byPrd?"Por Mês — Todos os prédios":"Por Mês — "+prd);
+  set("cs-cm",(byPrd?"Todos os prédios":"Prédio "+prd)+" · Jan–Ago 2026"+(mes!=="ALL"?" · "+capF(mes)+" destacado":""));
+
+  // CH5 — Composição
+  CH.comp.data.labels=grpShort;
+  CH.comp.data.datasets=[
+    {label:"Insumos",    type:"bar",data:grpAvg("ins").map(v=>+v.toFixed(2)),backgroundColor:"#752B1F",stack:"s",borderRadius:0,order:1},
+    {label:"Mão de Obra",type:"bar",data:grpAvg("mo").map(v=>+v.toFixed(2)), backgroundColor:"#E67142",stack:"s",borderRadius:0,order:1},
+    {label:"Operacional",type:"bar",data:grpAvg("op").map(v=>+v.toFixed(2)), backgroundColor:"#AF8668",stack:"s",borderRadius:4,order:1},
+    {label:"Meta Alvo",type:"line",data:grpAvg("meta").map(v=>+v.toFixed(2)),
+     borderColor:"#5E8C61",borderWidth:2.5,borderDash:[5,4],
+     pointBackgroundColor:"#5E8C61",pointRadius:5,backgroundColor:"transparent",order:0}
+  ];
+  CH.comp.update();
+  set("ct-comp",byPrd?"Custo Total Decomposto por Prédio":"Custo Total Decomposto por Mês — "+prd);
+
+  // TABLE
+  const tbody=document.getElementById("tbl-body");
+  tbody.innerHTML="";
+  const showDetail=mes!=="ALL"||!byPrd;
+  const rows=showDetail?data:PREDIOS.map(p=>{
+    const rr=RAW.filter(r=>r.p===p),tt=rr.reduce((s,r)=>s+r.total,0);
+    return{p,_isRaw:false,mRange:"Jan–Ago",total:tt,
+      jfl:rr.reduce((s,r)=>s+r.jfl,0),pi:rr.reduce((s,r)=>s+r.pi,0),
+      ins:avg(rr,"ins"),mo:avg(rr,"mo"),op:avg(rr,"op"),meta:avg(rr,"meta")};
+  });
+  function statusBadge(metaV,insV){
+    const d=metaV-insV;
+    if(Math.abs(d)<1) return['bnt','≈ Na Meta'];
+    return d>=0?['bok','✓ Abaixo']:['bwn','✗ Acima'];
+  }
+  rows.forEach(d=>{
+    const [cls,lbl]=statusBadge(d.meta,d.ins);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td style="font-weight:700;color:#752B1F">${d.p}</td>
+      <td style="color:#7A6556">${d._isRaw?capF(d.m):d.mRange}</td>
+      <td class="tnum">${fN(d.total)}</td><td class="tnum">${fN(d.jfl)}</td>
+      <td class="tnum">${d.pi>0?fN(d.pi):"—"}</td>
+      <td class="tnum">${fR(d.ins)}</td>
+      <td class="tnum">${fR(d.ins+d.mo+d.op)}</td>
+      <td class="tnum">${fR(d.meta)}</td>
+      <td><span class="badge ${cls}">${lbl}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  const [tfCls,tfLbl]=statusBadge(meta,ins);
+  const tf=document.createElement("tr");
+  tf.className="tfoot";
+  tf.innerHTML=`<td colspan="2">TOTAL / MÉDIA</td>
+    <td class="tnum">${fN(tot)}</td><td class="tnum">${fN(jfl)}</td>
+    <td class="tnum">${pi>0?fN(pi):"—"}</td>
+    <td class="tnum">${fR(ins)}</td><td class="tnum">—</td>
+    <td class="tnum">${fR(meta)}</td>
+    <td><span class="badge ${tfCls}">${tfLbl}</span></td>`;
+  tbody.appendChild(tf);
+  set("sub-tab",`${data.length} registro${data.length!==1?"s":""} · ${lbl}`);
+}
+
+document.getElementById("sel-mes").addEventListener("change",e=>{S.mes=e.target.value;render()});
+document.getElementById("sel-prd").addEventListener("change",e=>{S.prd=e.target.value;render()});
+
+// NAV active on scroll
+const navAs=document.querySelectorAll("nav a");
+document.querySelectorAll(".sec").forEach(s=>{
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        navAs.forEach(a=>a.classList.remove("active"));
+        const a=document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if(a)a.classList.add("active");
+      }
+    });
+  },{threshold:.25}).observe(s);
+});
+
+render();
+</script>
+</body>
+</html>
